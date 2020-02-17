@@ -22,12 +22,9 @@ class TF2:
         else:
             self.schema = Schema(data)
 
-        if from_update is True:
-            self.emmiter.emit('schema', self.schema)
-
     def get_schema(self):
         if self.api_key is None:
-            raise Exception('Chuj')
+            raise Exception('Api key not defined')
 
         overview = Schema.get_overview(self.api_key)
         items = Schema.get_items(self.api_key)
