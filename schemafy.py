@@ -50,7 +50,7 @@ class Schema:
                 url = url['result']['items_game_url']
                 request = requests.get(url)
                 if request.status_code == 200:
-                    items_game = vdf_to_dict(request.content)
+                    items_game = vdf.loads(request.text)
                     return items_game
                 else:
                     return 'Request failed with code {}'.format(request.status_code)
@@ -63,7 +63,7 @@ class Schema:
         else:
             request = requests.get('https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/master/tf/scripts/items/items_game.txt')
             if request.status_code == 200:
-                items_game = vdf_to_dict(request.content)
+                items_game = vdf.loads(request.text)
                 return items_game
             else:
                 return 'Request failed with code {}'.format(request.status_code)
@@ -85,18 +85,3 @@ def get_all_schema_items(api_key):
             next_start = None
         items.extend(result['result']['items'])
     return items
-
-
-"""
-    Converts response from valve data format into dict
-    # TODO find a way to do it without creating tmp file
-"""
-def vdf_to_dict(data):
-
-    open('tmp.txt', 'wb').write(data)
-    data = vdf.load(open('tmp.txt'))
-    os.remove('tmp.txt')
-
-    return data
-
-
