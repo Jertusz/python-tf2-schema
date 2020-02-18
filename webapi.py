@@ -1,5 +1,12 @@
 import requests
 
+"""
+    :param {String} sub_api: Name of Api part being called
+    :param {String} version: Version of the api
+    :param {String} api_key: Api Key from https://steamcommunity.com/dev/apikey
+    :param {Int} input: Parameter to go through the whole list of item, required in /GetSchemaItems/
+"""
+
 
 def api_request(sub_api, version, api_key=None, input=None):
 

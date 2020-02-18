@@ -13,6 +13,11 @@ class Schema:
         self.raw = data['raw'] if data is not None else None
         self.time = data['time'] if 'time' in data else time.time()
 
+    """
+        Gets item by defindex
+        Requires running main.TF2.get_schema first
+    """
+
     def get_item_by_defindex(self, defindex):
         for item in self.raw['schema']['items']:
             if item['defindex'] == defindex:
@@ -28,6 +33,12 @@ class Schema:
     @staticmethod
     def get_items(api_key):
         return get_all_schema_items(api_key)
+
+    """
+        Gets items_game.txt
+        :param {Boolean} github: True grabs from github repo (3rd party), 
+                                False grabs directly from SteamWebApi (Api_key required)
+    """
 
     @staticmethod
     def get_items_game(api_key=None, github=True):
@@ -76,6 +87,10 @@ def get_all_schema_items(api_key):
     return items
 
 
+"""
+    Converts response from valve data format into dict
+    # TODO find a way to do it without creating tmp file
+"""
 def vdf_to_dict(data):
 
     open('tmp.txt', 'wb').write(data)
