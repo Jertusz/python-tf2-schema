@@ -2,7 +2,6 @@
 
 
 Get TF2 schema from SteamWebApi or github
-Find items by defindex
 
 ## What is TF2 Schema
 
@@ -46,8 +45,15 @@ overview = a.schema.get_overview(api_key)
 # Get items, grabs items from API
 items = a.schema.get_items(api_key)
 
-# et items game, grabs items_game.txt, Github = True, grabs from github, Github = False, grabs from API
+# Get items game, grabs items_game.txt, Github = True, grabs from github, Github = False, grabs from API
 items_game = a.schema.get_items_game(api_key, github)
+
+# Get attribute by defindex
+attribute = a.schema.get_attribute_by_defindex(defindex)
+
+# Get quality by id/name
+quality = a.schema.get_quality_by_id(id)
+quality = a.schema.get_quality_by_name(name)
 
 # To json returns whole object as json
 dict = a.schema.to_json()
