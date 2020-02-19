@@ -56,20 +56,14 @@ class Schema:
         qualities = self.raw['items_game']['qualities']
         for quality in qualities:
             if qualities[quality]['value'] == str(id):
-                row = {
-                    quality: qualities[quality]['value']
-                }
-                return row
+                return quality
         return
 
     def get_quality_by_name(self, name):
         qualities = self.raw['items_game']['qualities']
         for quality in qualities:
             if quality == name:
-                row = {
-                    quality: qualities[quality]['value']
-                }
-                return row
+                return qualities[quality]['value']
         return
 
     def get_effect_by_id(self, id):
@@ -97,20 +91,65 @@ class Schema:
     def get_skin_by_id(self, id):
         for paint_kit in self.paint_kits:
             if paint_kit == str(id):
-                row = {
-                    paint_kit: self.paint_kits[paint_kit]
-                }
-                return row
+                return self.paint_kits[paint_kit]
         return
 
     def get_skin_by_name(self, name):
         for paint_kit in self.paint_kits:
             if self.paint_kits[paint_kit] == name:
-                row = {
-                    paint_kit: self.paint_kits[paint_kit]
-                }
-                return row
+                return self.paint_kits[paint_kit]
         return
+
+    def get_name(self, item):
+        schema_item = self.get_item_by_defindex(item['defindex'])
+        if schema_item is None:
+            print("Item does not exist")
+            return
+
+        validated_item = validate_item(item)
+
+        name = ''
+
+        if not validated_item['tradable']:
+            name += 'Non-Tradable '
+        if not validated_item['craftable']:
+            name += 'Non-Craftable '
+        if validated_item['quality2'] is not None:
+            name += self.get_quality_by_id(validated_item['quality2']) + ' '
+        if (validated_item['quality'] != 6 and validated_item['quality'] != 15 and validated_item['quality'] != 15
+                or validated_item['quality'] == 5 and validated_item['effect'] is None
+                or schema_item['item_quality'] == 5):
+            name += self.get_quality_by_id(validated_item['quality']) + ' '
+        if validated_item['festive'] is True:
+            name += 'Festivized '
+        if validated_item['effect'] is not None:
+            name += self.get_effect_by_id(validated_item['effect']) + ' '
+        if validated_item['killstreak'] is not None and validated_item['killstreak'] > 0:
+            ks = ['Killstreak', 'Specialized Killstreak', 'Professional Killstreak']
+            name += ks[validated_item['killstreak' - 1]] + ' '
+        if validated_item['target'] is not None:
+            target = self.get_item_by_defindex(validated_item['target'])
+            name += target['name'] + ' '
+        if validated_item['output_quality'] is not None and validated_item['output_quality'] != 6:
+            name = self.get_quality_by_id(validated_item['output_quality']) + ' ' + name
+        if validated_item['output'] is not None:
+            output = self.get_item_by_defindex(validated_item['output'])
+            name += output['name'] + ' '
+        if validated_item['australium'] is True:
+            name += 'Australium'
+        if validated_item['paint_kit'] is not None:
+            paint_kit = self.get_skin_by_id(validated_item['paint_kit'])
+            name += paint_kit + ' '
+
+        name += schema_item['name']
+
+        if validated_item['wear'] is not None:
+            wear = ['Factory New', 'Minimal Wear', 'Field-Tested', 'Well-Worn', 'Battle Scarred']
+            name += f'({wear[validated_item["wear"] - 1]})'
+        if validated_item['crate_series'] is not None:
+            name += ' #' + validated_item['crate_series']
+
+        return name
 
     @staticmethod
     def get_overview(api_key):
@@ -175,9 +214,33 @@ class Schema:
                     paint_kits[id] = protodefs[protodef]
         return paint_kits
 
-
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4)
+
+
+def validate_item(item):
+    template = {
+        'defindex': 0,
+        'quality': 0,
+        'craftable': True,
+        'tradable': True,
+        'killstreak': None,
+        'australium': False,
+        'effect': None,
+        'festive': False,
+        'paint_kit': None,
+        'wear': None,
+        'quality2': None,
+        'target': None,
+        'output': None,
+        'output_quality': None,
+        'crate_series': None
+    }
+    for attribute in template:
+        if attribute not in item:
+            item[attribute] = template[attribute]
+
+    return item
 
 
 def get_all_schema_items(api_key):
