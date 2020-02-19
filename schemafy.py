@@ -37,10 +37,11 @@ class Schema:
     """
 
     def get_attribute_by_defindex(self, defindex):
-        for attribute in self.raw['items_game']['attributes']:
+        attributes = self.raw['items_game']['attributes']
+        for attribute in attributes:
             if attribute == str(defindex):
                 row = {
-                    defindex: self.raw['items_game']['attributes'][attribute]
+                    defindex: attributes[attribute]
                 }
                 return row
         return
@@ -51,21 +52,45 @@ class Schema:
     """
 
     def get_quality_by_id(self, id):
-        for quality in self.raw['items_game']['qualities']:
-            if self.raw['items_game']['qualities'][quality]['value'] == str(id):
+        qualities = self.raw['items_game']['qualities']
+        for quality in qualities:
+            if qualities[quality]['value'] == str(id):
                 row = {
-                    quality: self.raw['items_game']['qualities'][quality]['value']
+                    quality: qualities[quality]['value']
                 }
                 return row
         return
 
     def get_quality_by_name(self, name):
-        for quality in self.raw['items_game']['qualities']:
+        qualities = self.raw['items_game']['qualities']
+        for quality in qualities:
             if quality == name:
                 row = {
-                    quality: self.raw['items_game']['qualities'][quality]['value']
+                    quality: qualities[quality]['value']
                 }
                 return row
+        return
+
+    def get_effect_by_id(self, id):
+        effects = self.raw['items_game']['attribute_controlled_attached_particles']
+        for category in effects:
+            for effect in effects[category]:
+                if effect == str(id):
+                    row = {
+                        id: effects[category][effect]
+                    }
+                    return row
+        return
+
+    def get_effect_by_name(self, name):
+        effects = self.raw['items_game']['attribute_controlled_attached_particles']
+        for category in effects:
+            for effect in effects[category]:
+                if effects[category][effect]['system'] == name:
+                    row = {
+                        effect: effects[category][effect]
+                    }
+                    return row
         return
 
     @staticmethod
