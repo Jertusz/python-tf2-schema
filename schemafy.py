@@ -137,6 +137,26 @@ class Schema:
             else:
                 return 'Request failed with code {}'.format(request.status_code)
 
+    @staticmethod
+    def get_paint_kits():
+        request = requests.get('https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/master/tf/resource/tf_proto_obj_defs_english.txt')
+        protodefs = vdf.loads(request.text)
+        protodefs = protodefs['lang']['Tokens']
+        paint_kits = {}
+        for protodef in protodefs:
+            parts = protodef.split('_')
+            category = parts[0]
+            id = parts[1]
+            if int(category) == 9:
+                clean = protodefs[protodef].split(' ')
+                if clean[0][:len(id)] == id:
+                    clean = ''.join(clean[1:])
+                    paint_kits[id] = clean
+                else:
+                    paint_kits[id] = protodefs[protodef]
+        return paint_kits
+
+
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4)
 
