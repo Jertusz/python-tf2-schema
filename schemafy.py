@@ -11,6 +11,7 @@ class Schema:
 
         self.raw = data['raw'] if data is not None else None
         self.time = data['time'] if 'time' in data else time.time()
+        self.paint_kits = self.get_paint_kits()
 
     """
         Gets item by defindex or by item name
@@ -91,6 +92,24 @@ class Schema:
                         effect: effects[category][effect]
                     }
                     return row
+        return
+
+    def get_skin_by_id(self, id):
+        for paint_kit in self.paint_kits:
+            if paint_kit == str(id):
+                row = {
+                    paint_kit: self.paint_kits[paint_kit]
+                }
+                return row
+        return
+
+    def get_skin_by_name(self, name):
+        for paint_kit in self.paint_kits:
+            if self.paint_kits[paint_kit] == name:
+                row = {
+                    paint_kit: self.paint_kits[paint_kit]
+                }
+                return row
         return
 
     @staticmethod
