@@ -62,7 +62,7 @@ class TF2:
                 'overview': overview,
                 'items': items
             },
-            'items_game': items_game
+            'items_game': items_game['items_game']
         }
         self.set_schema(raw)
 

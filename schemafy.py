@@ -2,7 +2,6 @@ import time
 import requests
 import vdf
 import json
-import os
 from webapi import api_request
 
 
@@ -14,7 +13,7 @@ class Schema:
         self.time = data['time'] if 'time' in data else time.time()
 
     """
-        Gets item by defindex
+        Gets item by defindex or by item name
         Requires running main.TF2.get_schema first
     """
 
@@ -22,6 +21,51 @@ class Schema:
         for item in self.raw['schema']['items']:
             if item['defindex'] == defindex:
                 return item
+        return
+
+    def get_item_by_item_name(self, name):
+        if name == 'Mann Co. Supply Crate Key':
+            name = 'Decoder Ring'
+        for item in self.raw['schema']['items']:
+            if item['name'] == name:
+                return item
+        return
+
+    """
+            Gets attribute by defindex
+            Requires running main.TF2.get_schema first
+    """
+
+    def get_attribute_by_defindex(self, defindex):
+        for attribute in self.raw['items_game']['attributes']:
+            if attribute == str(defindex):
+                row = {
+                    defindex: self.raw['items_game']['attributes'][attribute]
+                }
+                return row
+        return
+
+    """
+                Gets quality by defindex or quality name
+                Requires running main.TF2.get_schema first
+    """
+
+    def get_quality_by_id(self, id):
+        for quality in self.raw['items_game']['qualities']:
+            if self.raw['items_game']['qualities'][quality]['value'] == str(id):
+                row = {
+                    quality: self.raw['items_game']['qualities'][quality]['value']
+                }
+                return row
+        return
+
+    def get_quality_by_name(self, name):
+        for quality in self.raw['items_game']['qualities']:
+            if quality == name:
+                row = {
+                    quality: self.raw['items_game']['qualities'][quality]['value']
+                }
+                return row
         return
 
     @staticmethod
