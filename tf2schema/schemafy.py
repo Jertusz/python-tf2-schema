@@ -2,7 +2,7 @@ import time
 import requests
 import vdf
 import json
-from webapi import api_request
+from tf2schema.webapi import api_request
 
 
 class Schema:
@@ -99,6 +99,11 @@ class Schema:
             if self.paint_kits[paint_kit] == name:
                 return self.paint_kits[paint_kit]
         return
+
+    """
+    Gets the name of an item, from a validated dictionary
+    :param {dict} item
+    """
 
     def get_name(self, item):
         schema_item = self.get_item_by_defindex(item['defindex'])

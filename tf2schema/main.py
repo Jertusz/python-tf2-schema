@@ -1,4 +1,4 @@
-from schemafy import Schema
+from tf2schema.schemafy import Schema
 import time
 import threading
 
