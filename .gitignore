@@ -2,3 +2,6 @@
 /development
 /.idea
 __pycache__/
+/build
+/dist
+/tf2schema.egg-info

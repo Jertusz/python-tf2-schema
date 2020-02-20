@@ -222,6 +222,9 @@ class Schema:
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4)
 
+    def __repr__(self):
+        return self.to_json()
+
 
 def validate_item(item):
     template = {
